@@ -1,0 +1,21 @@
+.cell {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 1px;
+    border: 1px solid #bdbdbd;
+}
+
+.is-revealed {
+    background-color: #d9d9d9;
+}
+
+.is-mine {
+    color: red;
+}
+
+.is-flagged {
+    color: blue;
+}
