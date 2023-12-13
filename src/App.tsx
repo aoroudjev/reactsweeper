@@ -1,27 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Board from './components/Board/Board';
 
 const App: React.FC = () => {
-    // If you have any app-wide state, like a game over state or a restart function, it would go here.
-    // For example:
-    // const [gameOver, setGameOver] = useState(false);
-    //
-    // const restartGame = () => {
-    //   // Logic to reset the game
-    //   setGameOver(false);
-    //   // Additional reset logic...
-    // };
+
+    const [gameOver, setGameOver] = useState(false);
+    const [resetCount, setResetCounter] = useState(0);
+
+    const restartGame = () => {
+        setGameOver(false);
+        setResetCounter(prev => prev + 1);
+
+    }
 
     return (
         <div className="App">
             <header className="App-header">
                 <h1>Minesweeper</h1>
-                {/* Display any game-wide controls or status here, for example a restart button */}
-                {/* gameOver && <button onClick={restartGame}>Restart Game</button> */}
+                <button onClick={restartGame}>Restart Game</button>
             </header>
             <main>
-                <Board />
+                <Board resetCount={resetCount} />
             </main>
         </div>
     );
