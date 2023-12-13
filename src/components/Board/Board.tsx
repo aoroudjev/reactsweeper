@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Cell from '../Cell/Cell';
+import {Simulate} from "react-dom/test-utils";
+import reset = Simulate.reset;
 
 type CellType = {
     isMine: boolean;
@@ -10,14 +12,12 @@ type CellType = {
 
 type BoardState = CellType[][];
 
-const Board: React.FC = () => {
-    // Define the initial state for the board
-    const [board, setBoard] = useState<BoardState>(generateInitialBoard());
+const Board: React.FC<{resetCount: number }> = ({resetCount}) => {
 
-    // Function to generate the initial board state
-    function generateInitialBoard(): BoardState {
-        // Placeholder function to generate an empty board
-        // In a real implementation, you would randomize mine placement here
+    const [board, setBoard] = useState<BoardState>(generateInitialBoard(6));
+
+    function generateInitialBoard(numMines: number): BoardState {
+
         const initialBoard: BoardState = Array(10).fill(null).map(() => Array(10).fill({
             isMine: false,
             isRevealed: false,
@@ -25,17 +25,45 @@ const Board: React.FC = () => {
             adjacentMines: 0,
         }));
 
+        // TODO: populate board
+
         return initialBoard;
+
     }
+
 
     function handleCellClick(row: number, col: number): void {
+        setBoard((prevBoard) => {
+            const newBoard = prevBoard.map((currentRow) =>
+                currentRow.map((cell) => ({...cell}))
+            );
 
+            if (!newBoard[row][col].isRevealed) {
+                newBoard[row][col].isRevealed = true;
+            }
+
+            return newBoard;
+        })
     }
 
-    // Function to handle cell right-click (flag cell)
     function handleCellRightClick(row: number, col: number): void {
-        // Logic to flag the cell and update the board state
+        setBoard((prevBoard) => {
+            const newBoard = prevBoard.map((currentRow) =>
+                currentRow.map((cell) => ({...cell}))
+            );
+
+            newBoard[row][col].isFlagged = !newBoard[row][col].isFlagged;
+
+            return newBoard;
+        })
     }
+
+    useEffect(() => {
+        if (resetCount){
+            setBoard(generateInitialBoard(6));
+        }
+    }, [resetCount]);
+
 
     return (
         <div className="board">
@@ -50,7 +78,7 @@ const Board: React.FC = () => {
                             adjacentMines={cell.adjacentMines}
                             onClick={() => handleCellClick(rowIndex, colIndex)}
                             onContextMenu={(e) => {
-                                e.preventDefault(); // Prevent the context menu from appearing
+                                e.preventDefault();
                                 handleCellRightClick(rowIndex, colIndex);
                             }}
                         />
