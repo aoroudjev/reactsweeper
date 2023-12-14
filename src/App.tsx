@@ -17,10 +17,10 @@ const App: React.FC = () => {
         <div className="App">
             <header className="App-header">
                 <h1>Minesweeper</h1>
-                <button onClick={restartGame}>Restart Game</button>
+                <button className="option-button" onClick={restartGame}>Restart Game</button>
             </header>
             <main>
-                <Board resetCount={resetCount} />
+                <Board dimensions={10} numMines={11} resetCount={resetCount} />
             </main>
         </div>
     );
