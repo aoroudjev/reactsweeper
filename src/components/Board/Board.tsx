@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
 import Cell from '../Cell/Cell';
-import {Simulate} from "react-dom/test-utils";
-import reset = Simulate.reset;
 
 type CellType = {
     isMine: boolean;
@@ -12,20 +10,54 @@ type CellType = {
 
 type BoardState = CellType[][];
 
-const Board: React.FC<{resetCount: number }> = ({resetCount}) => {
+type BoardProps = {
+    numMines: number;
+    resetCount: number;
+    dimensions: number;
+}
 
-    const [board, setBoard] = useState<BoardState>(generateInitialBoard(6));
+const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
+
+    const [board, setBoard] = useState<BoardState>(() => generateInitialBoard(numMines));
+
+    useEffect(() => {
+        setBoard(generateInitialBoard(numMines));
+    }, [dimensions, numMines, resetCount]);
 
     function generateInitialBoard(numMines: number): BoardState {
 
-        const initialBoard: BoardState = Array(10).fill(null).map(() => Array(10).fill({
-            isMine: false,
-            isRevealed: false,
-            isFlagged: false,
-            adjacentMines: 0,
-        }));
+        const initialBoard: BoardState = Array(dimensions).fill(null).map(() =>
+            Array(dimensions).fill(null).map(() => ({
+                isMine: false,
+                isRevealed: false,
+                isFlagged: false,
+                adjacentMines: 0
+            }))
+        );
 
-        // TODO: populate board
+
+        for (let i = 0; i < numMines; i++) {
+            let rand_row = Math.floor(Math.random() * dimensions);
+            let rand_col = Math.floor(Math.random() * dimensions);
+            if (initialBoard[rand_row][rand_col].isMine) {
+                i--;
+            } else {
+                initialBoard[rand_row][rand_col].isMine = true;
+                populate_adjacent(rand_row, rand_col);
+            }
+        }
+
+        function populate_adjacent(rand_row: number, rand_col: number) {
+            // check all neighbors logic
+            for (let row = Math.max(rand_row - 1, 0); row <= Math.min(rand_row + 1, dimensions - 1); row++) {
+                for (let col = Math.max(rand_col - 1, 0); col <= Math.min(rand_col + 1, dimensions - 1); col++) {
+                    if (row !== rand_row || col !== rand_col) {
+                        initialBoard[row][col].adjacentMines += 1;
+                    }
+                }
+            }
+        }
+
 
         return initialBoard;
 
@@ -38,8 +70,29 @@ const Board: React.FC<{resetCount: number }> = ({resetCount}) => {
                 currentRow.map((cell) => ({...cell}))
             );
 
-            if (!newBoard[row][col].isRevealed) {
+            function recursive_reveal(row: number, col: number) {
+                if (newBoard[row][col].isRevealed) {
+                    return
+                }
                 newBoard[row][col].isRevealed = true;
+
+                if (newBoard[row][col].adjacentMines !== 0) {
+                    return
+                }
+
+                // check all neighbors logic
+                for (let curr_row = Math.max(row - 1, 0); curr_row <= Math.min(row + 1, dimensions - 1); curr_row++) {
+                    for (let curr_col = Math.max(col - 1, 0); curr_col <= Math.min(col + 1, dimensions - 1); curr_col++) {
+                        if (curr_row === row && curr_col === col) {
+                            continue;
+                        }
+                        recursive_reveal(curr_row, curr_col);
+                    }
+                }
+            }
+
+            if (!newBoard[row][col].isRevealed) {
+                recursive_reveal(row, col)
             }
 
             return newBoard;
@@ -57,12 +110,6 @@ const Board: React.FC<{resetCount: number }> = ({resetCount}) => {
             return newBoard;
         })
     }
-
-    useEffect(() => {
-        if (resetCount){
-            setBoard(generateInitialBoard(6));
-        }
-    }, [resetCount]);
 
 
     return (
