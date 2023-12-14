@@ -5,11 +5,21 @@
     text-align: center;
     vertical-align: middle;
     margin: 1px;
-    border: 1px solid #bdbdbd;
+    border: 1px solid #ECEAED;
+    color: black;
+    transition: background-color 0.3s;
+}
+
+.cell:hover{
+    background-color: white;
 }
 
 .is-revealed {
-    background-color: #d9d9d9;
+    background-color: #ECEAED;
+}
+
+.is-revealed:hover{
+    background-color: green;
 }
 
 .is-mine {
