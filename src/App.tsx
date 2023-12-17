@@ -4,23 +4,20 @@ import Board from './components/Board/Board';
 
 const App: React.FC = () => {
 
-    const [gameOver, setGameOver] = useState(false);
     const [resetCount, setResetCounter] = useState(0);
 
-    const restartGame = () => {
-        setGameOver(false);
+    const restartGame = (): void => {
         setResetCounter(prev => prev + 1);
-
     }
 
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Minesweeper</h1>
+                <h1>Reactsweeper</h1>
                 <button className="option-button" onClick={restartGame}>Restart Game</button>
             </header>
             <main>
-                <Board dimensions={10} numMines={11} resetCount={resetCount} />
+                <Board dimensions={4} numMines={1} resetCount={resetCount} />
             </main>
         </div>
     );
