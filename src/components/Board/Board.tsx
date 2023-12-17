@@ -19,9 +19,15 @@ type BoardProps = {
 const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
 
     const [board, setBoard] = useState<BoardState>(() => generateInitialBoard(numMines));
+    const [gameOver, setGameOver] = useState<boolean>(false);
+    const [gameWon, setGameWon] = useState<boolean>(false)
+    const [revealedCells, setRevealedCells] = useState<number>(0);
 
     useEffect(() => {
         setBoard(generateInitialBoard(numMines));
+        setGameOver(false);
+        setGameWon(false);
+        setRevealedCells(0);
     }, [dimensions, numMines, resetCount]);
 
     function generateInitialBoard(numMines: number): BoardState {
@@ -37,8 +43,8 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
 
 
         for (let i = 0; i < numMines; i++) {
-            let rand_row = Math.floor(Math.random() * dimensions);
-            let rand_col = Math.floor(Math.random() * dimensions);
+            const rand_row = Math.floor(Math.random() * dimensions);
+            const rand_col = Math.floor(Math.random() * dimensions);
             if (initialBoard[rand_row][rand_col].isMine) {
                 i--;
             } else {
@@ -47,7 +53,7 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
             }
         }
 
-        function populate_adjacent(rand_row: number, rand_col: number) {
+        function populate_adjacent(rand_row: number, rand_col: number): void {
             // check all neighbors logic
             for (let row = Math.max(rand_row - 1, 0); row <= Math.min(rand_row + 1, dimensions - 1); row++) {
                 for (let col = Math.max(rand_col - 1, 0); col <= Math.min(rand_col + 1, dimensions - 1); col++) {
@@ -64,20 +70,30 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
     }
 
 
+    function revealAllCells(boardState: BoardState): void {
+        boardState.forEach(row => {
+            row.forEach(cell => {
+                cell.isRevealed = true;
+            });
+        });
+    }
+
     function handleCellClick(row: number, col: number): void {
+        if (gameWon) {
+            return
+        }
         setBoard((prevBoard) => {
             const newBoard = prevBoard.map((currentRow) =>
                 currentRow.map((cell) => ({...cell}))
             );
 
-            function recursive_reveal(row: number, col: number) {
-                if (newBoard[row][col].isRevealed) {
-                    return
-                }
+            function recursive_reveal(row: number, col: number, increment: () => void): void {
                 newBoard[row][col].isRevealed = true;
+                increment();
 
+                // number caught
                 if (newBoard[row][col].adjacentMines !== 0) {
-                    return
+                    return;
                 }
 
                 // check all neighbors logic
@@ -86,13 +102,30 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
                         if (curr_row === row && curr_col === col) {
                             continue;
                         }
-                        recursive_reveal(curr_row, curr_col);
+                        if (newBoard[curr_row][curr_col].isRevealed) {
+                            continue;
+                        }
+                        recursive_reveal(curr_row, curr_col, increment);
                     }
                 }
+                return
             }
 
-            if (!newBoard[row][col].isRevealed) {
-                recursive_reveal(row, col)
+            if (newBoard[row][col].isMine) {
+                setGameOver(true);
+                revealAllCells(newBoard);
+            } else if (!newBoard[row][col].isRevealed) {
+                let count = 0;
+                const increment = (): number => {
+                    return count += 1;
+                }
+
+                recursive_reveal(row, col, increment);
+                const newCount = revealedCells + count;
+                setRevealedCells(newCount);
+                if (newCount >= ((dimensions * dimensions) - numMines)) {
+                    setGameWon(true);
+                }
             }
 
             return newBoard;
@@ -114,6 +147,7 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
 
     return (
         <div className="board">
+
             {board.map((row, rowIndex) => (
                 <div key={rowIndex} className="board-row">
                     {row.map((cell, colIndex) => (
@@ -132,6 +166,8 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
                     ))}
                 </div>
             ))}
+            {gameOver && <div className="game-end-message">Game Over!</div>}
+            {gameWon && <div className="game-end-message">Winner Winner Chicken Dinner</div>}
         </div>
     );
 };
