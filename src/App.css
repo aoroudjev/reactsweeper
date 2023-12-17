@@ -18,3 +18,9 @@
     border-color: white;
     border-radius: 5px;
 }
+
+.game-end-message{
+    color: #A6c9e7;
+    font-weight: 900;
+    font-size: 20px;
+}
