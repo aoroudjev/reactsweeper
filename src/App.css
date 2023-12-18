@@ -15,8 +15,15 @@
 }
 
 .option-button {
-    border-color: white;
+    border-color: #ECEAED;
+    border-style: solid;
     border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+}
+.option-button:hover{
+    color: white;
+    box-shadow: 0 5px 15px #ECEAED;
 }
 
 .game-end-message{
@@ -24,3 +31,19 @@
     font-weight: 900;
     font-size: 20px;
 }
+
+.utils{
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+}
+
+.board-options{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #ECEAED;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+}
+
