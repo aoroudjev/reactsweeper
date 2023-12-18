@@ -18,7 +18,7 @@ const Cell: React.FC<CellProps> = ({
                                        onClick,
                                        onContextMenu,
                                    }) => {
-    const renderContent = () => {
+    const renderContent = (): string | null | number => {
         if (!isRevealed) {
             return isFlagged ? '🚩' : null;
         }
@@ -28,7 +28,6 @@ const Cell: React.FC<CellProps> = ({
         return adjacentMines > 0 ? adjacentMines : null;
     };
 
-    // Add additional classes based on the cell state for styling
     let className = 'cell';
     if (isRevealed) className += ' is-revealed';
     if (isMine && isRevealed) className += ' is-mine';
