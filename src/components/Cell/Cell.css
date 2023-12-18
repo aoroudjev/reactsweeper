@@ -4,13 +4,16 @@
     font-size: 20px;
     text-align: center;
     vertical-align: middle;
-    border: 2px solid #78a7d1;
+    border: 2px solid #4A5B63;
+    border-radius: 5px;
     color: black;
-    transition: background-color 100ms;
+    transition: background-color 0.5s;
+    background-color: black;
 }
 
 .cell:hover{
-    background-color: #ECEAED;
+    border: 2px solid grey;
+    background-color: grey;
     transition: ease-out;
 }
 
@@ -19,14 +22,16 @@
 }
 
 .is-revealed:hover{
-    background-color: grey;
+    border: 2px solid #ECEAED;
+    background-color: #ECEAED;
 
 }
 
 .is-mine {
     color: red;
+    background-color: darkred;
 }
-
-.is-flagged {
-    color: blue;
+.is-mine:hover {
+    background-color: darkred;
+    border-color: black;
 }
