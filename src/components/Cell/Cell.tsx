@@ -1,5 +1,5 @@
 import React from 'react';
-import './Cell.css'; // Assuming you have CSS for styling the cell
+import './Cell.css';
 
 type CellProps = {
     isMine: boolean;
