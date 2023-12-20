@@ -1,6 +1,6 @@
 * {
-    background: #4A5B63;
-    color: #ECEAED;
+    background: #dad3c1;
+    color: #1d1b17;
 }
 
 .App {
@@ -10,38 +10,53 @@
     align-items: center;
     text-align: center;
     min-height: 100vh;
-    color: white;
+    color: #1d1b17;
     white-space: nowrap;
 }
 
 .option-button {
-    border-color: #ECEAED;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 15px;
-    margin: 10px;
-}
-.option-button:hover{
-    color: white;
-    box-shadow: 0 5px 15px #ECEAED;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 1rem;
+    margin: 0.2rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    color: #1d1b17;
+    backface-visibility: hidden;
+    border: 0.1rem solid transparent;
+    border-radius: 3rem;
+    border-color: #1d1b17;
+    transition: transform 0.2s cubic-bezier(0.235, 0, 0.05, 0.95);
 }
 
-.game-end-message{
-    color: #A6c9e7;
+.option-button:hover {
+    transform: perspective(1px) scale3d(1.044, 1.044, 1) translateZ(0) !important;
+}
+
+.italic{
+    font-style: italic;
+}
+
+.game-end-message {
+    color: #525f61;
     font-weight: 900;
     font-size: 20px;
 }
 
-.utils{
+.utils {
     display: flex;
     justify-content: space-around;
     align-content: center;
 }
 
-.board-options{
+.board-options {
     display: flex;
     flex-direction: column;
-    border: 2px solid #ECEAED;
+    border: 2px solid #1d1b17;
     border-radius: 5px;
     margin: 5px;
     padding: 5px;
