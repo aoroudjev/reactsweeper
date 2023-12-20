@@ -16,6 +16,9 @@ const App: React.FC = () => {
         <div className="App">
             <header className="App-header">
                 <h1>Reactsweeper</h1>
+                <p className="italic">
+                    where we believe in never losing on your first click
+                </p>
             </header>
             <div className="utils">
                 <div className="board-options">
