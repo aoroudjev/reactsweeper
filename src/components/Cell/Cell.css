@@ -4,27 +4,26 @@
     font-size: 20px;
     text-align: center;
     vertical-align: middle;
-    border: 2px solid #4A5B63;
+    border: 0.05rem solid #918b7d;
     border-radius: 5px;
-    color: black;
+    color: #1d1b17;
     transition: background-color 0.5s;
-    background-color: black;
+    background-color: #1d1b17;
 }
 
 .cell:hover{
-    border: 2px solid grey;
-    background-color: grey;
+    border: 0.05rem solid #1d1b17;
+    background-color: #dad3c1;
     transition: ease-out;
 }
 
 .is-revealed {
-    background-color: #ECEAED;
+    background-color: white;
 }
 
 .is-revealed:hover{
-    border: 2px solid #ECEAED;
-    background-color: #ECEAED;
-
+    border: 0 solid white;
+    background-color: white;
 }
 
 .is-mine {
@@ -33,5 +32,5 @@
 }
 .is-mine:hover {
     background-color: darkred;
-    border-color: black;
+    border-color: #1d1b17;
 }
