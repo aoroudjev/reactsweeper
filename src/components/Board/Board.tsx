@@ -18,21 +18,23 @@ type BoardProps = {
 
 const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
 
-    const [board, setBoard] = useState<BoardState>(() => generateInitialBoard(numMines));
+    const [board, setBoard] = useState<BoardState>([[]]);
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [gameWon, setGameWon] = useState<boolean>(false)
     const [revealedCells, setRevealedCells] = useState<number>(0);
+    const [firstClick, setFirstClick] = useState<boolean>(true);
 
     useEffect(() => {
-        setBoard(generateInitialBoard(numMines));
+        setBoard(generateInitialBoard);
         setGameOver(false);
         setGameWon(false);
         setRevealedCells(0);
+        setFirstClick(true);
     }, [dimensions, numMines, resetCount]);
 
-    function generateInitialBoard(numMines: number): BoardState {
+    function generateInitialBoard(): BoardState {
 
-        const initialBoard: BoardState = Array(dimensions).fill(null).map(() =>
+        return Array(dimensions).fill(null).map(() =>
             Array(dimensions).fill(null).map(() => ({
                 isMine: false,
                 isRevealed: false,
@@ -40,35 +42,18 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
                 adjacentMines: 0
             }))
         );
+    }
 
-
-        for (let i = 0; i < numMines; i++) {
-            const rand_row = Math.floor(Math.random() * dimensions);
-            const rand_col = Math.floor(Math.random() * dimensions);
-            if (initialBoard[rand_row][rand_col].isMine) {
-                i--;
-            } else {
-                initialBoard[rand_row][rand_col].isMine = true;
-                populate_adjacent(rand_row, rand_col);
-            }
-        }
-
-        function populate_adjacent(rand_row: number, rand_col: number): void {
-            // check all neighbors logic
-            for (let row = Math.max(rand_row - 1, 0); row <= Math.min(rand_row + 1, dimensions - 1); row++) {
-                for (let col = Math.max(rand_col - 1, 0); col <= Math.min(rand_col + 1, dimensions - 1); col++) {
-                    if (row !== rand_row || col !== rand_col) {
-                        initialBoard[row][col].adjacentMines += 1;
-                    }
+    function populateAdjacent(rand_row: number, rand_col: number): void {
+        // check all neighbors logic
+        for (let row = Math.max(rand_row - 1, 0); row <= Math.min(rand_row + 1, dimensions - 1); row++) {
+            for (let col = Math.max(rand_col - 1, 0); col <= Math.min(rand_col + 1, dimensions - 1); col++) {
+                if (row !== rand_row || col !== rand_col) {
+                    board[row][col].adjacentMines += 1;
                 }
             }
         }
-
-
-        return initialBoard;
-
     }
-
 
     function revealAllCells(boardState: BoardState): void {
         boardState.forEach(row => {
@@ -78,10 +63,34 @@ const Board: React.FC<BoardProps> = ({numMines, resetCount, dimensions}) => {
         });
     }
 
+    function placeMines(clickedRow: number, clickedCol: number): void {
+        let minesPlaced = 0;
+        if (numMines >= dimensions * dimensions) {
+            return
+        }
+        while (minesPlaced < numMines) {
+            const randRow = Math.floor(Math.random() * dimensions);
+            const randCol = Math.floor(Math.random() * dimensions);
+            if (!(board[randRow][randCol].isMine)) {
+                if (!(randRow == clickedRow && randCol == clickedCol)) {
+                    board[randRow][randCol].isMine = true;
+                    populateAdjacent(randRow, randCol);
+                    minesPlaced++;
+                }
+            }
+        }
+    }
+
     function handleCellClick(row: number, col: number): void {
         if (gameWon) {
             return
         }
+
+        if (firstClick) {
+            placeMines(row, col);
+            setFirstClick(false);
+        }
+
         setBoard((prevBoard) => {
             const newBoard = prevBoard.map((currentRow) =>
                 currentRow.map((cell) => ({...cell}))
