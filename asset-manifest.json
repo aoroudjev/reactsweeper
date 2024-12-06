@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/reactsweeper/static/css/main.16a2a83d.css",
+    "main.css": "/reactsweeper/static/css/main.43f4f728.css",
     "main.js": "/reactsweeper/static/js/main.f13bc270.js",
     "index.html": "/reactsweeper/index.html",
-    "main.16a2a83d.css.map": "/reactsweeper/static/css/main.16a2a83d.css.map",
+    "main.43f4f728.css.map": "/reactsweeper/static/css/main.43f4f728.css.map",
     "main.f13bc270.js.map": "/reactsweeper/static/js/main.f13bc270.js.map"
   },
   "entrypoints": [
-    "static/css/main.16a2a83d.css",
+    "static/css/main.43f4f728.css",
     "static/js/main.f13bc270.js"
   ]
 }
