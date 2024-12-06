@@ -33,7 +33,8 @@
 }
 
 .option-button:hover {
-    transform: perspective(1px) scale3d(1.044, 1.044, 1) translateZ(0) !important;
+    background: #1d1b17;
+    color: #dad3c1;
 }
 
 .italic{
